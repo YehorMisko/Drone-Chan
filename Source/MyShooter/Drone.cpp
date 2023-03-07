@@ -13,9 +13,8 @@
 #include "Components/SpotLightComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Camera/PlayerCameraManager.h"
-
-
+#include "Kismet/GameplayStatics.h"
+#include "Engine/SkeletalMeshSocket.h"
 // Sets default values
 ADrone::ADrone()
 {
@@ -40,10 +39,10 @@ ADrone::ADrone()
 	DroneScreenWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Drone Screen Widget"));
 	/*Create the floating movement component and configure it to better replicate how a real life drone would behave*/
 	PawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Drone Float Movement"));
-	PawnMovement->Acceleration = 2000.0f;
+	PawnMovement->Acceleration = 8000.0f;
 	PawnMovement->Deceleration = 500.0f;
 	PawnMovement->TurningBoost = 1.0f;
-	PawnMovement->MaxSpeed = 300.0f;
+	PawnMovement->MaxSpeed = 1200.0f;
 	this->bUseControllerRotationYaw = true;
 	/*By default the drone is not possesed*/
 	droneActivated = false;
@@ -54,6 +53,7 @@ ADrone::ADrone()
 void ADrone::BeginPlay()
 {
 	Super::BeginPlay();
+	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ADrone::OnOverlapBegin);
 	
 }
 
@@ -124,6 +124,25 @@ void ADrone::Deactivate()
     playerController->Possess(player);
 }
 
+void ADrone::Death()	
+{
+	const USkeletalMeshSocket* ExplosionSocket = SkeletalMesh->GetSocketByName("ExplosionSocket");
+	if (ExplosionSocket)
+	{
+		const FTransform SocketTransform = ExplosionSocket->GetSocketTransform(SkeletalMesh);
+		playerController->Possess(player);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, SocketTransform);
+		Destroy();
+	}
+}
+
+void ADrone::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(OverlappedComp->GetCollisionProfileName() == "Trigger")
+		Death();
+}
+
 // Called every frame
 void ADrone::Tick(float DeltaTime)
 {
@@ -145,5 +164,6 @@ void ADrone::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAction("DroneToggle", IE_Pressed, this, &ADrone::Deactivate);
+	PlayerInputComponent->BindAction("TestAction", IE_Pressed, this, &ADrone::Death);
 }
 

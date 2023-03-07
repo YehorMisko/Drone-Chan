@@ -30,6 +30,8 @@ AMyShooterCharacter::AMyShooterCharacter():
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	//By default drone is not possessed
 	isOnDrone = false;
+	//By Default you get 3 drones
+	DroneAmmo = 3;
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +44,7 @@ void AMyShooterCharacter::BeginPlay()
 	Gun->SetOwner(this);
 	
 	/*Spawn a Drone in the world*/
-	Drone = GetWorld()->SpawnActor<ADrone>(DroneClass);
+	
 
 }
 void AMyShooterCharacter::Test()
@@ -138,9 +140,17 @@ void AMyShooterCharacter::FireWeapon()
 
 void AMyShooterCharacter::ToggleDrone()
 {
-
+	
 	/*Possess the drone*/
-	Drone->Activate(Cast<ACharacter>(this));
+	if (IsValid(Drone)) {
+		Drone->Activate(Cast<ACharacter>(this));
+	}
+	else if(DroneAmmo > 0){
+		DroneAmmo--;
+		Drone = GetWorld()->SpawnActor<ADrone>(DroneClass,GetActorLocation(),GetActorRotation());
+		Drone->Activate(Cast<ACharacter>(this));
+		
+	}
 
 }
 

@@ -103,6 +103,9 @@ private:
 		bool isOnDrone;
 	/*Particle system for the Muzzle*/
 	class UParticleSystem* MuzzleFlash;
+
+	/*Drone ammount*/
+	int DroneAmmo;
 public:
 	/*Returns CameraBoom subobject*/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

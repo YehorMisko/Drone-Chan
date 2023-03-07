@@ -38,7 +38,9 @@ protected:
 	/*Creat a screen Widget for drone UI*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Camera)
 		class UWidgetComponent* DroneScreenWidget;
-
+	/*Custom Overlap function override*/
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 	/*Check if the drone is possessed or not*/
@@ -56,6 +58,10 @@ private:
 	AController* playerController;
 	/*The character that possesed the drone*/
 	ACharacter* player;
+	/*Function for destroying the drone*/
+	void Death();
+	/*Particle system for the explosion*/
+	class UParticleSystem* ExplosionEffect;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
