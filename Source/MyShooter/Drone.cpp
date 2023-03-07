@@ -117,7 +117,7 @@ void ADrone::LookUp(float Value)
 	newRotation.ClampAxis(80.0);
 	
 }
-/*Not working for now*/
+/*Possess the character*/
 void ADrone::Deactivate()
 {
 	droneActivated = !droneActivated;
