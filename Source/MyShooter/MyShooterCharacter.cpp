@@ -145,11 +145,17 @@ void AMyShooterCharacter::ToggleDrone()
 	if (IsValid(Drone)) {
 		Drone->Activate(Cast<ACharacter>(this));
 	}
+	/*If drone does not exist, spawn and remove 1 from the count*/
 	else if(DroneAmmo > 0){
 		DroneAmmo--;
 		Drone = GetWorld()->SpawnActor<ADrone>(DroneClass,GetActorLocation(),GetActorRotation());
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Yellow, FString::Printf(TEXT("Drone Count: %d"), DroneAmmo));
 		Drone->Activate(Cast<ACharacter>(this));
 		
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Yellow, FString::Printf(TEXT("Out of Drones")));
 	}
 
 }

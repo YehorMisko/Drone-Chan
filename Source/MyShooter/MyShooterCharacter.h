@@ -102,6 +102,7 @@ private:
 	UPROPERTY()
 		bool isOnDrone;
 	/*Particle system for the Muzzle*/
+	UPROPERTY(EditDefaultsOnly, Category = MuzzleFlash)
 	class UParticleSystem* MuzzleFlash;
 
 	/*Drone ammount*/

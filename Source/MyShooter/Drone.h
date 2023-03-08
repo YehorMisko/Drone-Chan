@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Drone.generated.h"
 
+
 class APlayerCameraManager;
 UCLASS()
 class MYSHOOTER_API ADrone : public APawn
@@ -23,6 +24,7 @@ protected:
 	/*Create a Collision Box*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Collision)
 		class UBoxComponent* CollisionBox;
+
 	/*Create a Skeletal Mesh for the drone*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = SkeletalMesh)
 		class USkeletalMeshComponent* SkeletalMesh;
@@ -39,6 +41,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Camera)
 		class UWidgetComponent* DroneScreenWidget;
 	/*Custom Overlap function override*/
+	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -61,6 +64,7 @@ private:
 	/*Function for destroying the drone*/
 	void Death();
 	/*Particle system for the explosion*/
+	UPROPERTY(EditDefaultsOnly, Category = ExplosionEffect)
 	class UParticleSystem* ExplosionEffect;
 public:	
 	// Called every frame
