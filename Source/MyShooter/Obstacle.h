@@ -21,10 +21,14 @@ protected:
 	/*Static mesh component*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = SkeletalMesh)
 		class UStaticMeshComponent* Mesh;
-	UFUNCTION()
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	/*Movement Speed*/
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float Speed;
 
+	/*Custom Overlap function override*/
+	UFUNCTION()
+		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -7,7 +7,7 @@
 #include "Drone.generated.h"
 
 
-class APlayerCameraManager;
+
 UCLASS()
 class MYSHOOTER_API ADrone : public APawn
 {
