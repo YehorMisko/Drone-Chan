@@ -7,8 +7,8 @@
 #include "MyShooterCharacter.generated.h"
 
 
-class AGun;
 class ADrone;
+class AWeapon;
 UCLASS()
 class MYSHOOTER_API AMyShooterCharacter : public ACharacter
 {
@@ -86,11 +86,11 @@ public:
 private:
 
 	
-	/*The gun that the Character is holding*/
-	UPROPERTY(EditDefaultsOnly, Category = Gun)
-		TSubclassOf<AGun> GunClass;
+	/*The weapon that the Character is holding*/
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+		TSubclassOf<AWeapon> WeaponClass;
 	UPROPERTY()
-		AGun* Gun;
+		AWeapon* Weapon;
 
 	/*The drone that is going to be possessed*/
 	UPROPERTY(EditDefaultsOnly, Category = Drone)

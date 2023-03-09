@@ -10,13 +10,14 @@ AItem::AItem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	//Create Item Mesh component and make it the root component
-	ItemMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemMesh"));
-	SetRootComponent(ItemMesh);
-	//Create a collision box and attach it to the root component ItemMesh
+	//Create a collision box and make it the root component
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	CollisionBox->SetupAttachment(GetRootComponent());
+	SetRootComponent(CollisionBox);
+
+	//Create Item Mesh component and attach it to the root component
+	ItemMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemMesh"));
+	ItemMesh->SetupAttachment(GetRootComponent());
+	
 	//Create A pickupWidget and attach it to the root component
 	PickupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickupWidget"));
 	PickupWidget->SetupAttachment(GetRootComponent());

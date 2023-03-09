@@ -4,7 +4,7 @@
 #include "MyShooterCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include"Gun.h"
+#include"Weapon.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include"DrawDebugHelpers.h"
@@ -39,11 +39,12 @@ void AMyShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	/*Spawn a Gun in the world and attach it to the character, to do: create a system where the character can pick up weapons*/
-	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
-	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-	Gun->SetOwner(this);
+	//if (Weapon) {
+		Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
+		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+		Weapon->SetOwner(this);
+//	}
 	
-	/*Spawn a Drone in the world*/
 	
 
 }
