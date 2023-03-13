@@ -32,22 +32,44 @@ AMyShooterCharacter::AMyShooterCharacter():
 	isOnDrone = false;
 	//By Default you get 3 drones
 	DroneAmmo = 3;
+	maxHealth = 100.0f;
 }
 
 // Called when the game starts or when spawned
 void AMyShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
+	health = maxHealth;
 	/*Spawn a Gun in the world and attach it to the character, to do: create a system where the character can pick up weapons*/
-	//if (Weapon) {
+	//if (WeaponClass) {
 		Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
 		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 		Weapon->SetOwner(this);
 //	}
 	
-	
-
 }
+//Take damage override
+float AMyShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float damageToApply = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	damageToApply = FMath::Min(health, damageToApply);
+	health -= damageToApply;
+	//Call the death func if health reaches 0
+	if (health <= 0)Death();
+	//UE_LOG(LogTemp, Warning, TEXT("Health left %f"), health);
+
+	return damageToApply;
+}
+//Kills the character
+void AMyShooterCharacter::Death()
+{
+	Destroy();
+	Weapon->Destroy();
+}
+
 void AMyShooterCharacter::Test()
 {
 	/*Test if an action is working*/
@@ -107,36 +129,9 @@ bool AMyShooterCharacter::TraceUnderCrosshairs(FHitResult& OutHitResult)
 /*WIP*/
 void AMyShooterCharacter::FireWeapon()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Fire Weapon"));
 
-	const USkeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("BarrelMuzzle");
-	if (BarrelSocket)
-	{
-		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
-		/*Spawn an Emitter at muzzle socket*/
-		if (MuzzleFlash)
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
-		}
-
-		FHitResult FireHit;
-		const FVector Start{ SocketTransform.GetLocation() };
-
-		const FQuat Rotation{ SocketTransform.GetRotation() };
-
-		const FVector RotationAxis{ Rotation.GetAxisX() };
-
-		const FVector End{ Start + RotationAxis * 50'000.f };
-		/*Line Trace by Channel and draw a debug line for a visual representation of the shot*/
-		GetWorld()->LineTraceSingleByChannel(FireHit, Start, End, ECollisionChannel::ECC_Visibility);
-		
-		if (FireHit.bBlockingHit)
-		{
-			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
-			DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 2.f);
-		}
-		
-	}
+	Weapon->PullTrigger();
+	
 }
 
 void AMyShooterCharacter::ToggleDrone()
@@ -191,4 +186,5 @@ void AMyShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &AMyShooterCharacter::FireWeapon);
 	    PlayerInputComponent->BindAction("DroneToggle", IE_Pressed, this, &AMyShooterCharacter::ToggleDrone);
 }
+
 

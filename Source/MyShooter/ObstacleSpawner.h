@@ -43,6 +43,9 @@ private:
 	void SpawnObstacle();
 	/*Timer Handler*/
 	FTimerHandle MemberTimerHandle;
+	/*how many seconds till the next wave of obstacles*/
+	UPROPERTY(EditAnywhere)
+	float spawnRate;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

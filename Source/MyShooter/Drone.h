@@ -66,11 +66,21 @@ private:
 	/*Particle system for the explosion*/
 	UPROPERTY(EditDefaultsOnly, Category = ExplosionEffect)
 	class UParticleSystem* ExplosionEffect;
+	//Create a CameraManager for clamping the view
+	APlayerCameraManager* Cam;
+	/*Amount of health*/
+	float health;
+	/*Amount of starting health*/
+	UPROPERTY(EditAnywhere)
+	float maxHealth;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//Called when damage is taken
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
 };

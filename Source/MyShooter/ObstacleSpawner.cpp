@@ -13,14 +13,14 @@ AObstacleSpawner::AObstacleSpawner()
 	/*Create the scene component and make it the root component*/
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Component"));
 	SetRootComponent(SceneComponent);
-	/*Create the spawn points and attach them to the scene component*/
+	/*Create the spawn points and attach them to the scene component, the designer can add as many as they would want*/
 	SpawnPoint1 = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn Point 1"));
 	SpawnPoint1->SetupAttachment(SceneComponent);
 	SpawnPoint2 = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn Point 2"));
 	SpawnPoint2->SetupAttachment(SceneComponent);
 	SpawnPoint3 = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn Point 3"));
 	SpawnPoint3->SetupAttachment(SceneComponent);
-	
+	spawnRate = 3.0f;
 }
 
 // Called when the game starts or when spawned
@@ -29,8 +29,8 @@ void AObstacleSpawner::BeginPlay()
 	Super::BeginPlay();
 	/*Make a list of all spawn points coordinates*/
 	listOfSpawnPoints = GetSpawnPoints();
-	/*Starting in 2 seconds, spawn an Obstacle each 3 seconds*/
-	GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &AObstacleSpawner::SpawnObstacle, 3.0f, true, 2.0f);
+	/*Starting in 2 seconds, spawn an Obstacle each set seconds*/
+	GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &AObstacleSpawner::SpawnObstacle, spawnRate, true, 2.0f);
 }
 //Get the x y z of all of all of the spawn points
 TArray<FVector> AObstacleSpawner::GetSpawnPoints()

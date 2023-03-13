@@ -21,9 +21,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties")
 		USkeletalMeshComponent* ItemMesh;
-	/*Line Trace collides with box to show HUD widgets*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties")
-		class UBoxComponent* CollisionBox;
+	/*Line Trace collides with box to show HUD widgets, uneeded for now*/
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties")
+	//	class UBoxComponent* CollisionBox;
 
 	/*Popup widget*/
 	UPROPERTY(EditAnywhere,BlueprintReadOnly)

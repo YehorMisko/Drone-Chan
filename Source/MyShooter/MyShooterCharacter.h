@@ -83,6 +83,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Called when damage is taken
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 private:
 
 	
@@ -107,6 +109,14 @@ private:
 
 	/*Drone ammount*/
 	int DroneAmmo;
+	/*the health that the character starts with*/
+	UPROPERTY(EditDefaultsOnly)
+		float maxHealth;
+
+	UPROPERTY(VisibleAnywhere)
+		float health;
+	//A function for what happens when the character dies
+	void Death();
 public:
 	/*Returns CameraBoom subobject*/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

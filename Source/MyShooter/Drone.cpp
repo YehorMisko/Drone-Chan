@@ -15,6 +15,7 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "MyPlayerCameraManager.h"
 // Sets default values
 ADrone::ADrone()
 {
@@ -46,8 +47,9 @@ ADrone::ADrone()
 	this->bUseControllerRotationYaw = true;
 	/*By default the drone is not possesed*/
 	droneActivated = false;
-
 	
+	/*By default health is set to 20*/
+	maxHealth = 20.0f;
 }
 
 // Called when the game starts or when spawned
@@ -56,8 +58,10 @@ void ADrone::BeginPlay()
 	Super::BeginPlay();
 	//Add the overriden BeginOverlap
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ADrone::OnOverlapBegin);
+	health = maxHealth;
+	
 }
-
+//Runs when the drone is activated
 void ADrone::Activate(ACharacter* Interactor)
 {
 	player = Interactor;
@@ -65,7 +69,9 @@ void ADrone::Activate(ACharacter* Interactor)
 	playerController = Interactor->GetController();
 	playerController->Possess(this);
 	UE_LOG(LogTemp, Warning, TEXT("Drone has been possesed"));
-	
+	//Get the CameraManager
+	Cam = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	Cast<AMyPlayerCameraManager>(Cam)->DroneClamp();//Activate the clamp
 }
 
 
@@ -109,20 +115,15 @@ void ADrone::TurnRight(float Value)
 {
 	AddControllerYawInput(Value * 45.0f * GetWorld()->GetDeltaSeconds());
 }
-/*UNUSED, the clamping is on the Camera Manager for now*/
-void ADrone::LookUp(float Value)
-{
-	
-	FRotator newRotation = DroneCam->GetComponentRotation();
-	newRotation.Pitch = newRotation.Pitch + (Value * -1);
-	newRotation.ClampAxis(80.0);
-	
-}
+
 /*Possess the character*/
 void ADrone::Deactivate()
 {
+	Cast<AMyPlayerCameraManager>(Cam)->DroneClamp(); //Unclamp the cam
 	droneActivated = !droneActivated;
     playerController->Possess(player);
+
+	
 }
 
 void ADrone::Death()	
@@ -130,10 +131,11 @@ void ADrone::Death()
 	const USkeletalMeshSocket* ExplosionSocket = SkeletalMesh->GetSocketByName("ExplosionSocket");
 	if (ExplosionSocket)
 	{
+		if(Controller != nullptr) Cast<AMyPlayerCameraManager>(Cam)->DroneClamp(); //Unclamp the cam
 		const FTransform SocketTransform = ExplosionSocket->GetSocketTransform(SkeletalMesh);
 		playerController->Possess(player);
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, SocketTransform);
-		Destroy();
+		Destroy();	
 	}
 }
 
@@ -152,6 +154,19 @@ void ADrone::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+}
+
+float ADrone::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float damageToApply = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	damageToApply = FMath::Min(health, damageToApply);
+	health -= damageToApply;
+	//Call the death func if health reaches 0
+	if (health <= 0)Death();
+	//UE_LOG(LogTemp, Warning, TEXT("Health left %f"), health);
+
+	return damageToApply;
 }
 
 
