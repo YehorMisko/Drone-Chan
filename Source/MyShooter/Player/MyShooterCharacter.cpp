@@ -4,11 +4,11 @@
 #include "MyShooterCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include"Weapon.h"
+#include"../Item/Weapon.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include"DrawDebugHelpers.h"
-#include "Drone.h"
+#include "../Drone/Drone.h"
 
 
 // Sets default values

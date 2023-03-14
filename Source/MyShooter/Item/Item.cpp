@@ -5,7 +5,6 @@
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "MyPlayerCameraManager.h"
 
 // Sets default values
 AItem::AItem()

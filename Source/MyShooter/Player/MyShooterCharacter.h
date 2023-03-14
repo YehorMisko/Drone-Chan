@@ -17,6 +17,8 @@ class MYSHOOTER_API AMyShooterCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMyShooterCharacter();
+	/*Fire function*/
+	void FireWeapon();
 
 protected:
 	// Called when the game starts or when spawned
@@ -64,8 +66,7 @@ protected:
 	/*Line trace for items under the corsshairs*/
 	bool TraceUnderCrosshairs(FHitResult& OutHitResult);
 
-	/*Fire function*/
-	void FireWeapon();
+	
 
 	/*Toggle possession function*/
 	void ToggleDrone();

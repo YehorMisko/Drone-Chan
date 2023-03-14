@@ -5,9 +5,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include <GameFramework/DefaultPawn.h>
+#include "GameFramework/DefaultPawn.h"
 #include "GameFramework/Character.h"
-#include "MyShooterCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Components/SpotLightComponent.h"

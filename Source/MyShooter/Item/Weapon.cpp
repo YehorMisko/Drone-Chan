@@ -36,8 +36,12 @@ void AWeapon::PullTrigger()
 		FVector End = Location + Rotation.Vector() * maxRange;
 
 		FHitResult Hit;
+
+		FCollisionQueryParams Params; //Collision Query Params
+		Params.AddIgnoredActor(this); //ignore the weapon
+		Params.AddIgnoredActor(GetOwner()); // The owner of the gun should not be able to hit themselves
 		//Do a trace
-		bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1);
+		bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1, Params);
 		//Check if you hit something
 
 		if (bSuccess)
